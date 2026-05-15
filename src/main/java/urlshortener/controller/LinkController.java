@@ -13,11 +13,7 @@ public class LinkController {
 
     private final LinkService linkService;
 
-    // =====================
-    // ENDPOINT 1: Shorten a URL
-    // POST /shorten
-    // Body: { "url": "https://youtube.com" }
-    // =====================
+    // ENDPOINT 1 Shorten a URL
     @PostMapping("/shorten")
     public ResponseEntity<String> shortenUrl(@RequestBody String fullUrl) {
 
@@ -29,10 +25,8 @@ public class LinkController {
                 .body(shortUrl);
     }
 
-    // =====================
-    // ENDPOINT 2: Get full URL from short code
+    // ENDPOINT 2 Get full URL from short code
     // GET /links/{code}
-    // =====================
     @GetMapping("/links/{code}")
     public ResponseEntity<String> getFullUrl(@PathVariable String code) {
 
@@ -43,10 +37,8 @@ public class LinkController {
                 .body(fullUrl);
     }
 
-    // =====================
-    // ENDPOINT 3: Redirect browser to full URL
-    // GET /{code}
-    // =====================
+    // ENDPOINT 3 Redirect browser to full URL
+
     @GetMapping("/{code}")
     public ResponseEntity<Void> redirect(@PathVariable String code) {
 

@@ -20,30 +20,27 @@ public class LinkService {
     private final ShortCodeGenerator shortCodeGenerator;
     private final RedisTemplate<String, String> redisTemplate;
 
-    // =====================
+
     // CREATE SHORT LINK
-    // =====================
     public String createShortLink(String fullUrl) {
 
-        // Step 1: Generate short code from full URL
+        // short code from full URL
         String shortCode = shortCodeGenerator.generate(fullUrl);
 
-        // Step 2: Check idempotency - does this URL already exist?
+        // idempotency -  URL already exist?
         return linkRepository.findByFullUrl(fullUrl)
                 .map(Link::getShortCode)
                 .orElseGet(() -> saveNewLink(fullUrl, shortCode));
     }
 
-    // =====================
-    // GET FULL URL
-    // =====================
+    //  FULL URL
     public String getFullUrl(String shortCode) {
 
-        // Step 1: Check if link exists in database
+        //  link exists in database
         Link link = linkRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new LinkNotFoundException(shortCode));
 
-        // Step 2: Check if link is expired in Valkey
+        // is expired in Valkey
         Boolean exists = redisTemplate.hasKey(shortCode);
         if (exists == null || !exists) {
             throw new LinkExpiredException(shortCode);
@@ -52,9 +49,8 @@ public class LinkService {
         return link.getFullUrl();
     }
 
-    // =====================
-    // PRIVATE HELPER
-    // =====================
+
+    // valkey use
     private String saveNewLink(String fullUrl, String shortCode) {
 
         // Calculate expiry time - 10 minutes from now
