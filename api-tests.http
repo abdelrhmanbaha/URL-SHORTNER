@@ -1,0 +1,20 @@
+### Test 1 - Shorten a URL
+POST http://localhost:8080/shorten
+Content-Type: application/json
+
+"https://www.google.com"
+
+### Test 2 - Shorten same URL again (idempotency check)
+POST http://localhost:8080/shorten
+Content-Type: application/json
+
+"https://www.google.com"
+
+### Test 3 - Get full URL from short code
+GET http://localhost:8080/links/REPLACE_WITH_YOUR_CODE
+
+### Test 4 - Test not found error
+GET http://localhost:8080/links/fakecode1
+
+### Test 5 - Redirect (copy result URL and open in browser)
+GET http://localhost:8080/REPLACE_WITH_YOUR_CODE

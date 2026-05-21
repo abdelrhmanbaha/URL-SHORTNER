@@ -26,19 +26,16 @@ public class LinkController {
     }
 
     // ENDPOINT 2 Get full URL from short code
-    // GET /links/{code}
     @GetMapping("/links/{code}")
     public ResponseEntity<String> getFullUrl(@PathVariable String code) {
-
         String fullUrl = linkService.getFullUrl(code);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
+                .header("Content-Type", "text/plain")
                 .body(fullUrl);
     }
 
     // ENDPOINT 3 Redirect browser to full URL
-
     @GetMapping("/{code}")
     public ResponseEntity<Void> redirect(@PathVariable String code) {
 
