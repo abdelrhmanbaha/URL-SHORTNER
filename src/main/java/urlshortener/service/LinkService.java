@@ -23,14 +23,13 @@ public class LinkService {
 
     // CREATE SHORT LINK
     public String createShortLink(String fullUrl) {
+        // Remove surrounding quotes if present
+        final String cleanUrl = fullUrl.replace("\"", "").trim();
 
-        // short code from full URL
-        String shortCode = shortCodeGenerator.generate(fullUrl);
-
-        // idempotency -  URL already exist?
-        return linkRepository.findByFullUrl(fullUrl)
+        String shortCode = shortCodeGenerator.generate(cleanUrl);
+        return linkRepository.findByFullUrl(cleanUrl)
                 .map(Link::getShortCode)
-                .orElseGet(() -> saveNewLink(fullUrl, shortCode));
+                .orElseGet(() -> saveNewLink(cleanUrl, shortCode));
     }
 
     //  FULL URL
@@ -40,7 +39,7 @@ public class LinkService {
         Link link = linkRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new LinkNotFoundException(shortCode));
 
-        // is expired in Valkey
+        //  expired  Valkey
         Boolean exists = redisTemplate.hasKey(shortCode);
         if (exists == null || !exists) {
             throw new LinkExpiredException(shortCode);

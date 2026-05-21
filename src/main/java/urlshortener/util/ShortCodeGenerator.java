@@ -9,7 +9,6 @@ public class ShortCodeGenerator {
 
     public String generate(String fullUrl) {
         try {
-            //   SHA256
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
             // Hash the URL into bytes
